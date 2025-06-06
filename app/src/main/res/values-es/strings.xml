@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Spanish -->
+    <string name="app_name">Dato diario</string>
+    <string name="title">Dato/Historia Diaria</string>
+    <string name="share_subject">Dato interesante: %1$s</string>
+    <string name="share_title">Compartir a través de</string>
+    <string name="no_facts">No hay datos disponibles. Actualiza o espera la actualización diaria.</string>
+    <string name="topic">Tema: %1$s</string>
+    <string name="btn_share">Compartir este dato</string>
+
+</resources>

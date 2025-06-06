@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Daily fact</string>
+    <string name="title">Daily Fact / Story</string>
+    <string name="share_subject">Interesting Fact: %1$s</string>
+    <string name="share_title">Share Fact Via</string>
+    <string name="no_facts">No fact available. Pull to refresh or wait for the daily update.</string>
+    <string name="topic">Topic: %1$s</string>
+    <string name="btn_share">Share this Fact</string>
+</resources>

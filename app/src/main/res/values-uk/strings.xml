@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Щоденний факт</string>
+    <string name="title">Щоденний Факт/Історія</string>
+    <string name="share_subject">Цікавий факт: %1$s</string>
+    <string name="share_title">Поділитися через</string>
+    <string name="no_facts">Немає доступних фактів. Оновіть або дочекайтеся щоденного оновлення.</string>
+    <string name="topic">Тема: %1$s</string>
+    <string name="btn_share">Поділитися цим фактом</string>
+</resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- German -->
+    <string name="app_name">Tägliche Tatsache</string>
+    <string name="title">Tägliche Tatsache/Geschichte</string>
+    <string name="share_subject">Interessante Tatsache: %1$s</string>
+    <string name="share_title">Teilen über</string>
+    <string name="no_facts">Keine Tatsache verfügbar. Aktualisieren oder warten Sie auf das tägliche Update.</string>
+    <string name="topic">Thema: %1$s</string>
+    <string name="btn_share">Diese Tatsache teilen</string>
+
+</resources>

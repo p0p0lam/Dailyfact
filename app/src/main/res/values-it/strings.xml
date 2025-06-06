@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Fatto quotidiano</string>
+    <string name="title">Fatto/Storia Quotidiana</string>
+    <string name="share_subject">Fatto interessante: %1$s</string>
+    <string name="share_title">Condividi tramite</string>
+    <string name="no_facts">Nessun fatto disponibile. Aggiorna o attendi l\'aggiornamento quotidiano.</string>
+    <string name="topic">Argomento: %1$s</string>
+    <string name="btn_share">Condividi questo fatto</string>
+</resources>
