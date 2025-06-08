@@ -38,5 +38,5 @@ val networkModule = module {
             // engine { connectTimeout = 10_000; socketTimeout = 10_000 }
         }
     }
-    single<FactApiService> { FactApiServiceImpl(get(), get()) }
+    single<FactApiService> { FactApiServiceImpl(get()) }
 }

@@ -1,5 +1,7 @@
 [versions]
 agp = "8.10.1"
+firebaseAppcheck = "18.0.0"
+firebaseAppcheckPlayintegrity = "18.0.0"
 ksp = "2.1.21-2.0.1"
 kotlin = "2.1.21"
 coreKtx = "1.16.0"
@@ -17,13 +19,14 @@ room = "2.7.1"
 slf4jAndroid = "1.7.36"
 workManager = "2.10.1"
 kotlinx-serialization = "1.8.1"
-firebaseBom = "33.14.0"
+firebaseBom = "33.15.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 firebase-analytics-ktx = { module = "com.google.firebase:firebase-analytics-ktx"}
-firebase-config = { module = "com.google.firebase:firebase-config-ktx" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+firebase-database = { module = "com.google.firebase:firebase-database" }
+google-firebase-appcheck-playintegrity = { module = "com.google.firebase:firebase-appcheck-playintegrity" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

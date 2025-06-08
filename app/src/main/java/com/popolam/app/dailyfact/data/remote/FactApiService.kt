@@ -1,6 +1,9 @@
 package com.popolam.app.dailyfact.data.remote
 
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import android.util.Log
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.popolam.app.dailyfact.BuildConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.bearerAuth
@@ -9,6 +12,7 @@ import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.HttpHeaders
+import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.json.Json
 import java.util.Locale
 
@@ -16,14 +20,18 @@ interface FactApiService {
     suspend fun generateRandomFact(): FactResponse? // Or directly Fact
 }
 
-class FactApiServiceImpl(private val httpClient: HttpClient, private val firebaseRemoteConfig: FirebaseRemoteConfig) : FactApiService {
+class FactApiServiceImpl(private val httpClient: HttpClient) : FactApiService {
     private val API_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
     private val API_KEY_CONFIG_KEY = "openrouter_api_key"
+    private val firebaseDatabase = Firebase.database
+    private var apiKey: String? = null
     override suspend fun generateRandomFact(): FactResponse? {
-        val apiKey = getApiKeyFromRemoteConfig() ?: return null
+        if (apiKey == null){
+            apiKey = getApiKeyFromRemoteConfig() ?: throw IllegalStateException("Oops")
+        }
         val language = Locale.getDefault().language
         return httpClient.post(API_ENDPOINT){
-            bearerAuth(apiKey)
+            bearerAuth(apiKey!!)
             headers {
                 append(HttpHeaders.ContentType, "application/json")
             }
@@ -38,10 +46,10 @@ class FactApiServiceImpl(private val httpClient: HttpClient, private val firebas
 
     private suspend fun getApiKeyFromRemoteConfig(): String? {
         return try {
-            firebaseRemoteConfig.fetchAndActivate()
-            firebaseRemoteConfig.getString(API_KEY_CONFIG_KEY)
-                .takeIf { it.isNotEmpty() }
+            firebaseDatabase.reference.child("apiKeys").child("openrouter").get().await()
+                .getValue(String::class.java)
         } catch (e: Exception) {
+            if (BuildConfig.DEBUG) Log.e("FactApiService", "Error getting API key", e)
             null
         }
     }

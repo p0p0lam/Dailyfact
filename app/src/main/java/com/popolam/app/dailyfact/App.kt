@@ -10,12 +10,20 @@ import org.koin.core.context.startKoin
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.logger.Level
 import androidx.work.*
+import com.google.firebase.FirebaseApp
+import com.google.firebase.appcheck.ktx.appCheck
+import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
+import com.google.firebase.ktx.Firebase
 import java.util.concurrent.TimeUnit
 import com.popolam.app.dailyfact.worker.DailyFactWorker
 
 class App: Application() {
     override fun onCreate() {
         super.onCreate()
+        FirebaseApp.initializeApp(this)
+        Firebase.appCheck.installAppCheckProviderFactory(
+            PlayIntegrityAppCheckProviderFactory.getInstance(),
+        )
         startKoin {
             androidLogger(Level.DEBUG) // Use Level.INFO or Level.NONE in release
             androidContext(this@App)

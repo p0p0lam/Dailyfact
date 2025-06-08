@@ -40,6 +40,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -51,7 +52,8 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
-    implementation(libs.firebase.config)
+    implementation(libs.google.firebase.appcheck.playintegrity)
+    implementation(libs.firebase.database)
     implementation(libs.firebase.analytics.ktx)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
