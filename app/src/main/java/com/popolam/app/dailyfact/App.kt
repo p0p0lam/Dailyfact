@@ -11,21 +11,22 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.logger.Level
 import androidx.work.*
 import com.google.firebase.FirebaseApp
+import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
 import com.google.firebase.appcheck.ktx.appCheck
-import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import com.google.firebase.ktx.Firebase
 import java.util.concurrent.TimeUnit
 import com.popolam.app.dailyfact.worker.DailyFactWorker
+import java.util.Calendar
 
 class App: Application() {
     override fun onCreate() {
         super.onCreate()
         FirebaseApp.initializeApp(this)
         Firebase.appCheck.installAppCheckProviderFactory(
-            PlayIntegrityAppCheckProviderFactory.getInstance(),
+            DebugAppCheckProviderFactory.getInstance(),
         )
         startKoin {
-            androidLogger(Level.DEBUG) // Use Level.INFO or Level.NONE in release
+            androidLogger(if(BuildConfig.DEBUG) Level.DEBUG else Level.NONE) // Use Level.INFO or Level.NONE in release
             androidContext(this@App)
             modules(listOf(appModule, viewModelModule, networkModule, databaseModule))
         }
@@ -37,15 +38,22 @@ class App: Application() {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED) // Only run when connected
             .build()
-
+        val calendar = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 9)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+            if (timeInMillis <= Calendar.getInstance().timeInMillis) add(Calendar.DAY_OF_MONTH, 1)
+        }
+        val initialDelay = calendar.timeInMillis - Calendar.getInstance().timeInMillis
         val dailyWorkRequest = PeriodicWorkRequestBuilder<DailyFactWorker>(1L, TimeUnit.DAYS)
             .setConstraints(constraints)
-            // .setInitialDelay(10, TimeUnit.SECONDS) // For testing
+            .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
             .build()
 
         WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
             "DailyFactFetchWork",
-            ExistingPeriodicWorkPolicy.KEEP, // Or REPLACE if you update the worker logic
+            ExistingPeriodicWorkPolicy.UPDATE, // Or REPLACE if you update the worker logic
             dailyWorkRequest
         )
     }
