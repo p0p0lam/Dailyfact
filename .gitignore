@@ -14,3 +14,5 @@
 .cxx
 local.properties
 openrouter.key
+# Google Services
+google-services.json
