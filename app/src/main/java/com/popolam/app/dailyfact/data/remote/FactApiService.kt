@@ -19,18 +19,19 @@ interface FactApiService {
     suspend fun generateRandomFact(): FactResponse? // Or directly Fact
 }
 
-class FactApiServiceImpl(private val httpClient: HttpClient) : FactApiService {
+class FactApiServiceImpl(private val httpClient: HttpClient, private val apiKeyProcessor: ApiKeyProcessor) : FactApiService {
     private val API_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
-    private val API_KEY_CONFIG_KEY = "openrouter_api_key"
     private val firebaseDatabase = Firebase.database
-    private var apiKey: String? = null
+    private var ak: String? = null
     override suspend fun generateRandomFact(): FactResponse? {
-        if (apiKey == null){
-            apiKey = getApiKeyFromRemoteConfig() ?: throw IllegalStateException("Oops")
+        if (ak == null){
+            ak = getApiKeyFromRemoteConfig()?.let {
+                apiKeyProcessor.process(it)
+            } ?: throw IllegalStateException("Oops")
         }
         val language = Locale.getDefault().language
         return httpClient.post(API_ENDPOINT){
-            bearerAuth(apiKey!!)
+            bearerAuth(ak!!)
             headers {
                 append(HttpHeaders.ContentType, "application/json")
             }
@@ -45,7 +46,7 @@ class FactApiServiceImpl(private val httpClient: HttpClient) : FactApiService {
 
     private suspend fun getApiKeyFromRemoteConfig(): String? {
         return try {
-            firebaseDatabase.reference.child("apiKeys").child("openrouter").get().await()
+            firebaseDatabase.reference.child("ak").child("or").get().await()
                 .getValue(String::class.java)
         } catch (e: Exception) {
             if (BuildConfig.DEBUG) Log.e("FactApiService", "Error getting API key", e)

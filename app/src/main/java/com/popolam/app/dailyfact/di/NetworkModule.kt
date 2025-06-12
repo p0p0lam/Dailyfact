@@ -1,5 +1,8 @@
 package com.popolam.app.dailyfact.di
 
+import com.popolam.app.dailyfact.BuildConfig
+import com.popolam.app.dailyfact.data.remote.ApiKeyProcessorImpl
+import com.popolam.app.dailyfact.data.remote.ApiKeyProcessorRelease
 import com.popolam.app.dailyfact.data.remote.FactApiService
 import com.popolam.app.dailyfact.data.remote.FactApiServiceImpl
 import io.ktor.client.HttpClient
@@ -38,5 +41,12 @@ val networkModule = module {
             // engine { connectTimeout = 10_000; socketTimeout = 10_000 }
         }
     }
-    single<FactApiService> { FactApiServiceImpl(get()) }
+    single<FactApiService> { FactApiServiceImpl(get(), get()) }
+    factory {
+        if (BuildConfig.DEBUG) {
+            ApiKeyProcessorRelease()
+        } else{
+            ApiKeyProcessorImpl()
+        }
+    }
 }
