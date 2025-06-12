@@ -16,14 +16,15 @@ slf4jAndroid = "1.7.36"
 workManager = "2.10.1"
 kotlinx-serialization = "1.8.1"
 firebaseBom = "33.15.0"
+googleServices = "4.4.2"
+crashlytics = "3.0.4"
+timber = "5.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 firebase-analytics-ktx = { module = "com.google.firebase:firebase-analytics-ktx"}
-firebase-appcheck-debug = { module = "com.google.firebase:firebase-appcheck-debug" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
-firebase-database = { module = "com.google.firebase:firebase-database" }
-google-firebase-appcheck-playintegrity = { module = "com.google.firebase:firebase-appcheck-playintegrity" }
+firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx"}
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -50,6 +51,8 @@ androidx-room-compiler = { group = "androidx.room", name = "room-compiler", vers
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workManager" }
 slf4j-android = { module = "org.slf4j:slf4j-android", version.ref = "slf4jAndroid" }
+timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+
 
 
 [plugins]
@@ -57,5 +60,7 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = {id ="com.google.devtools.ksp", version.ref = "ksp"}
+google-services = {id ="com.google.gms.google-services", version.ref = "googleServices"}
+crashlytics = {id ="com.google.firebase.crashlytics", version.ref = "crashlytics"}
 
 

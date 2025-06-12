@@ -11,20 +11,18 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.logger.Level
 import androidx.work.*
 import com.google.firebase.FirebaseApp
-import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
-import com.google.firebase.appcheck.ktx.appCheck
-import com.google.firebase.ktx.Firebase
 import java.util.concurrent.TimeUnit
 import com.popolam.app.dailyfact.worker.DailyFactWorker
+import timber.log.Timber
 import java.util.Calendar
 
 class App: Application() {
     override fun onCreate() {
         super.onCreate()
         FirebaseApp.initializeApp(this)
-        Firebase.appCheck.installAppCheckProviderFactory(
-            DebugAppCheckProviderFactory.getInstance(),
-        )
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
         startKoin {
             androidLogger(if(BuildConfig.DEBUG) Level.DEBUG else Level.NONE) // Use Level.INFO or Level.NONE in release
             androidContext(this@App)
