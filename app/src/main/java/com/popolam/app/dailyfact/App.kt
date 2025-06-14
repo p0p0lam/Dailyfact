@@ -11,6 +11,7 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.logger.Level
 import androidx.work.*
 import com.google.firebase.FirebaseApp
+import com.popolam.app.dailyfact.data.KeysRepository
 import java.util.concurrent.TimeUnit
 import com.popolam.app.dailyfact.worker.DailyFactWorker
 import timber.log.Timber
@@ -28,7 +29,8 @@ class App: Application() {
             androidContext(this@App)
             modules(listOf(appModule, viewModelModule, networkModule, databaseModule))
         }
-
+        //Timber.d("Public key pem:\n${KeysRepository.getPublicKeyPem()}")
+        //KeysRepository.invalidateKey(this)
         setupDailyWorker()
     }
 
