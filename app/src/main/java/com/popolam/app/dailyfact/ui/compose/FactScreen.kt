@@ -142,10 +142,31 @@ fun FactScreen(viewModel: FactViewModel) {
                         ) {
                             FactContentCard(
                                 fact = uiState.fact!!,
-                                modifier = Modifier.padding(16.dp)
+                                modifier = Modifier.padding(16.dp),
+                                onShareClick = {
+                                    uiState.fact!!.let { factToShare ->
+                                        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                            type = "text/plain"
+                                            putExtra(
+                                                Intent.EXTRA_SUBJECT,
+                                                context.getString(
+                                                    R.string.share_subject,
+                                                    factToShare.topic
+                                                )
+                                            )
+                                            putExtra(Intent.EXTRA_TEXT, factToShare.text)
+                                        }
+                                        context.startActivity(
+                                            Intent.createChooser(
+                                                shareIntent,
+                                                context.getString(R.string.share_title)
+                                            )
+                                        )
+                                    }
+                                }
                             )
                         }
-                        Box(
+                        /*Box(
                             modifier = Modifier.fillMaxWidth(),
                             contentAlignment = Alignment.CenterEnd
                         ) {
@@ -171,7 +192,7 @@ fun FactScreen(viewModel: FactViewModel) {
                                 }
                             }
 
-                        }
+                        }*/
 
                         Spacer(modifier = Modifier.height(16.dp))
                     }
@@ -180,6 +201,30 @@ fun FactScreen(viewModel: FactViewModel) {
 
             }
         }
+    }
+}
+
+@Composable
+fun ShareFactButtonCircle(
+    modifier: Modifier = Modifier,
+    onShareClick: () -> Unit
+) {
+    val buttonGradient = Brush.horizontalGradient(
+        colors = listOf(ButtonGradientStart, ButtonGradientEnd)
+    )
+    Box(
+        modifier = modifier
+            .size(56.dp)
+            .background(buttonGradient, shape = CircleShape)
+            .clip(CircleShape)
+            .clickable { onShareClick() },
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = Icons.Default.Share,
+            contentDescription = null,
+            tint = Color.White
+        )
     }
 }
 
@@ -287,7 +332,7 @@ fun FactHeader(isLoading: Boolean = false, onRefreshClick: () -> Unit) {
 }
 
 @Composable
-fun FactContentCard(fact: Fact, modifier: Modifier = Modifier) {
+fun FactContentCard(fact: Fact, modifier: Modifier = Modifier, onShareClick: () -> Unit) {
     val isDarkTheme = isSystemInDarkTheme()
 
     val iconCircleBackground =
@@ -337,18 +382,39 @@ fun FactContentCard(fact: Fact, modifier: Modifier = Modifier) {
             )
 
             Spacer(modifier = Modifier.height(24.dp))
-
-            Box(
-                modifier = Modifier
-                    .background(tagBackgroundColor, RoundedCornerShape(16.dp))
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = stringResource(R.string.topic, fact.topic),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = tagTextColor
-                )
+                Box(
+                    modifier = Modifier
+                        .weight(0.7f)){
+                    Box(
+                        modifier = Modifier
+                            .background(tagBackgroundColor, RoundedCornerShape(16.dp))
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.topic, fact.topic),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = tagTextColor
+                        )
+                    }
+                }
+
+                Box(
+                    modifier = Modifier.weight(0.3f),
+                    contentAlignment = Alignment.CenterEnd
+                ) {
+                    ShareFactButtonCircle(
+                        modifier = Modifier
+                            .padding(8.dp),
+                        onShareClick = { onShareClick() }
+                    )
+                }
             }
+            
         }
     }
 }
@@ -386,7 +452,8 @@ fun LightPreview() {
                                 topic = "Sample Topic",
                                 dateFetched = 0
                             ),
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier.padding(16.dp),
+                            {}
                         )
                     }
                     ShareFactButton(modifier = Modifier.padding(16.dp)) { }
@@ -398,7 +465,7 @@ fun LightPreview() {
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-//@Preview(name = "Dark Theme", showBackground = true, uiMode = UI_MODE_NIGHT_YES, locale = "pl")
+@Preview(name = "Dark Theme", showBackground = true, uiMode = UI_MODE_NIGHT_YES, locale = "uk")
 @Composable
 fun DarkPreview() {
     DailyFactTheme(darkTheme = true) {
@@ -434,10 +501,11 @@ fun DarkPreview() {
                                 topic = "Sample Topic",
                                 dateFetched = 0
                             ),
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier.padding(16.dp),
+                            {}
                         )
                     }
-                    ShareFactButton(modifier = Modifier.padding(16.dp)) { }
+                    //ShareFactButton(modifier = Modifier.padding(16.dp)) { }
                 }
 
             }
@@ -445,7 +513,7 @@ fun DarkPreview() {
     }
 }
 
-@Preview(name = "Dark Theme", showBackground = true, uiMode = UI_MODE_NIGHT_YES, locale = "pl")
+//@Preview(name = "Dark Theme", showBackground = true, uiMode = UI_MODE_NIGHT_YES, locale = "pl")
 @Composable
 fun DarkLoadingPreview() {
     DailyFactTheme(darkTheme = true) {

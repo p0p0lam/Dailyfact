@@ -5,6 +5,7 @@ import com.popolam.app.dailyfact.data.remote.FactApiServiceImpl
 import com.popolam.app.dailyfact.data.remote.PushApiService
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpTimeout
 import kotlinx.serialization.json.Json
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.defaultRequest
@@ -14,6 +15,7 @@ import io.ktor.http.HttpHeaders
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import java.util.concurrent.TimeUnit
 
 val networkModule = module {
     single {
@@ -23,11 +25,13 @@ val networkModule = module {
                 config {
                     // this: OkHttpClient.Builder
                     followRedirects(true)
+                    callTimeout(1, TimeUnit.MINUTES)
                     // ...
                 }
             }
             defaultRequest {
-                url("http://192.168.1.148:8080/api/")
+                //url("http://192.168.2.2:8080/api/")
+                url("https://dailyfactbackend.onrender.com/api/")
             }
             install(ContentNegotiation) {
                 json(Json {
@@ -40,6 +44,9 @@ val networkModule = module {
                 logger = Logger.DEFAULT
                 level = LogLevel.ALL
                 sanitizeHeader { header -> header == HttpHeaders.Authorization }
+            }
+            install(HttpTimeout){
+                socketTimeoutMillis = TimeUnit.MINUTES.toMillis(1)
             }
             // Configure engine, timeouts, logging etc.
             // engine { connectTimeout = 10_000; socketTimeout = 10_000 }
